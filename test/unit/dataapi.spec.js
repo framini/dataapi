@@ -1,5 +1,5 @@
 import test from 'tape';
-import component from './../component';
+import component from './../../src/component';
 
 test('basic arithmetic', function(t) {
   t.plan(4);

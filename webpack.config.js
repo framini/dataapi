@@ -5,8 +5,9 @@ const validate = require('webpack-validator');
 const parts = require('./lib/parts');
 
 const PATHS = {
-  app: path.join(__dirname, 'app'),
-  build: path.join(__dirname, 'build')
+  app: path.join(__dirname, 'src'),
+  build: path.join(__dirname, 'build'),
+  dist: path.join(__dirname, 'dist')
 };
 
 const common = {
@@ -16,7 +17,10 @@ const common = {
   output: {
     path: PATHS.build,
     filename: '[name].js'
-  },
+  }
+};
+
+const plugins = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'dataapi'
@@ -33,7 +37,7 @@ switch (process.env.npm_lifecycle_event) {
       {
         devtool: 'source-map',
         output: {
-          path: PATHS.build,
+          path: PATHS.dist,
           filename: '[name].[chunkhash].js',
           // This is used for require.ensure. The setup
           // will work without but this is useful to set.
@@ -41,7 +45,7 @@ switch (process.env.npm_lifecycle_event) {
         }
       },
       parts.babel(PATHS.app),
-      parts.clean(PATHS.build),
+      parts.clean(PATHS.dist),
       parts.setFreeVariable(
         'process.env.NODE_ENV',
         'production'
@@ -50,12 +54,14 @@ switch (process.env.npm_lifecycle_event) {
     break;
   case 'stats':
     config = merge(
-      common
+      common,
+      plugins
     );
     break;
   default:
     config = merge(
       common,
+      plugins,
       {
         devtool: 'eval-source-map'
       },

@@ -2,7 +2,7 @@
   "name": "dataapi",
   "version": "0.0.1",
   "description": "Module to define components through a data-* API",
-  "main": "index.js",
+  "main": "dist/dataapi.js",
   "dependencies": {
     "stats-webpack-plugin": "^0.3.1"
   },
@@ -13,7 +13,6 @@
     "clean-webpack-plugin": "^0.1.9",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.17.0",
-    "node-sass": "^3.7.0",
     "tape": "^4.5.1",
     "testem": "^1.7.1",
     "webpack": "^1.13.0",

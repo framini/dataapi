@@ -12,7 +12,7 @@ const PATHS = {
 
 const common = {
   entry: {
-    app: PATHS.app
+    app: './src/dataapi'
   },
   output: {
     path: PATHS.build,
@@ -38,7 +38,7 @@ switch (process.env.npm_lifecycle_event) {
         devtool: 'source-map',
         output: {
           path: PATHS.dist,
-          filename: '[name].js',
+          filename: 'dataapi.js',
           // This is used for require.ensure. The setup
           // will work without but this is useful to set.
           chunkFilename: '[chunkhash].js'

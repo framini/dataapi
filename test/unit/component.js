@@ -64,35 +64,45 @@ test('parseComponents method returns an array of components', t => {
 
   t.skip('selectComponents should return an array of DOM elements to be parsed', st => {
     const componentsToBeParsed = cmp.selectComponents(content);
-    st.equal(typeof componentsToBeParsed, 'array');
-    st.equal(componentsToBeParsed.length, goalParsedComponents);
+    // checks if it is a Set
+    // TODO: review if there is a better way to validate this
+    st.equal(typeof componentsToBeParsed, 'object');
+    st.equal(typeof componentsToBeParsed.add, 'function');
+    st.equal(typeof componentsToBeParsed.has, 'function');
+    // checks that we are only parsing components using the supported namespaces
+    st.equal(componentsToBeParsed.size, goalParsedComponents);
     st.end();
   });
 
   t.skip('parseComponentOptions should return an object', st => {
+    // this should return a set
     const componentsToBeParsed = cmp.selectComponents(content);
-    const parsedComponents = cmp.parseComponentOptions(componentsToBeParsed);
-    st.equal(componentsToBeParsed.length, parsedComponents.length);
-    st.equal(typeof parsedComponents, 'array');
+    const comps = [...componentsToBeParsed];
+    // we are just going to pass only one component. in this case, the first parsed
+    const parsedComponentOptions = cmp.parseComponentOptions(comps[0]);
+    st.equal(componentsToBeParsed.length, parsedComponentOptions.length);
 
-    parsedComponents.forEach(cmp => {
+    // checks if it is a Map
+    // TODO: review if there is a better way to validate this
+    st.equal(typeof parsedComponentOptions, 'object');
+    st.equal(typeof parsedComponentOptions.clear, 'function');
+    st.equal(typeof parsedComponentOptions.set, 'function');
+
+    parsedComponentOptions.forEach(cmp => {
       st.ok(cmp.name, 'the parsed component has a ´name´ property');
       st.ok(cmp.options, 'the parsed component has a ´options´ property');
       st.equal(typeof cmp.options, 'object', 'the options property should be an oject');
-      st.equal(cmp.options.length, 'object', 'the options should have a lenght of 3');
-      forEach(cmp.options, (v, k) => {
-        switch (k) {
-          case k === 'obj':
-            st.equal(typeof v, 'object');
-            break;
-          case k === 'arr':
-            st.equal(typeof v, 'array');
-            break;
-          case k === 'str':
-            st.equal(typeof v, 'string');
-            break;
-        }
-      });
+      // options API
+      st.equal(typeof cmp.options.get, 'function');
+      st.equal(typeof cmp.options.getEl, 'function');
+      st.equal(typeof cmp.options.size, 'function');
+      // the options obj should only include properties defined by the user through the data-* API
+      st.equal(cmp.options.size, 'object', 'the options obj should have a lenght of 3');
+      // supported types object, array and string
+      st.equal(typeof cmp.options.get('obj'), 'object');
+      st.equal(typeof cmp.options.get('arr'), 'array');
+      st.equal(typeof cmp.options.get('str'), 'string');
+      st.end();
     });
 
     st.end();
@@ -100,7 +110,12 @@ test('parseComponents method returns an array of components', t => {
 
   // t.equal(typeof parsedComponents, 'array');
   // t.equal(parsedComponents.length, goalParsedComponents);
-  t.equal(goalParsedComponents, goalParsedComponents);
+  // checks if it is a Map
+  // TODO: review if there is a better way to validate this
+  t.equal(typeof parsedComponents, 'object');
+  t.equal(typeof parsedComponents.clear, 'function');
+  t.equal(typeof parsedComponents.set, 'function');
+  t.equal(parsedComponents.length, goalParsedComponents);
 
   t.end();
 });

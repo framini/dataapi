@@ -5,11 +5,11 @@ import { forEach } from 'lodash';
 test.skip('component exposes the expected API', t => {
   const cmp = component();
   t.equal(typeof cmp.parseComponents, 'function', 'parseComponents is a method');
-  // t.equal(typeof cmp.selectComponents, 'function', 'selectComponents is a method');
-  // t.equal(typeof cmp.parseComponentOptions, 'function', 'parseComponentOptions is a method');
+  t.equal(typeof cmp._selectComponents, 'function', '_selectComponents is a method');
+  t.equal(typeof cmp._parseComponentOptions, 'function', '_parseComponentOptions is a method');
   t.equal(typeof cmp.initComponent, 'function', 'initComponent is a method');
 
-  t.end()
+  t.end();
 });
 
 test('parseComponents method returns an array of components', t => {
@@ -62,8 +62,8 @@ test('parseComponents method returns an array of components', t => {
    */
   const goalParsedComponents = amountCmps.length - notToBeParsed;
 
-  t.skip('selectComponents should return an array of DOM elements to be parsed', st => {
-    const componentsToBeParsed = cmp.selectComponents(content);
+  t.skip('_selectComponents should return an array of DOM elements to be parsed', st => {
+    const componentsToBeParsed = cmp._selectComponents(content);
     // checks if it is a Set
     // TODO: review if there is a better way to validate this
     st.equal(typeof componentsToBeParsed, 'object');
@@ -71,15 +71,16 @@ test('parseComponents method returns an array of components', t => {
     st.equal(typeof componentsToBeParsed.has, 'function');
     // checks that we are only parsing components using the supported namespaces
     st.equal(componentsToBeParsed.size, goalParsedComponents);
+
     st.end();
   });
 
-  t.skip('parseComponentOptions should return an object', st => {
+  t.skip('_parseComponentOptions should return an object', st => {
     // this should return a set
-    const componentsToBeParsed = cmp.selectComponents(content);
+    const componentsToBeParsed = cmp._selectComponents(content);
     const comps = [...componentsToBeParsed];
     // we are just going to pass only one component. in this case, the first parsed
-    const parsedComponentOptions = cmp.parseComponentOptions(comps[0]);
+    const parsedComponentOptions = cmp._parseComponentOptions(comps[0]);
     st.equal(componentsToBeParsed.length, parsedComponentOptions.length);
 
     // checks if it is a Map
@@ -108,14 +109,18 @@ test('parseComponents method returns an array of components', t => {
     st.end();
   });
 
-  // t.equal(typeof parsedComponents, 'array');
-  // t.equal(parsedComponents.length, goalParsedComponents);
-  // checks if it is a Map
-  // TODO: review if there is a better way to validate this
-  t.equal(typeof parsedComponents, 'object');
-  t.equal(typeof parsedComponents.clear, 'function');
-  t.equal(typeof parsedComponents.set, 'function');
-  t.equal(parsedComponents.length, goalParsedComponents);
+  t.skip('parsedComponents should return a Map', st => {
+    const parsedComponents = cmp.parseComponents(config);
+    // checks if it is a Map
+    // TODO: review if there is a better way to validate this
+    st.equal(typeof parsedComponents, 'object');
+    st.equal(typeof parsedComponents.clear, 'function');
+    st.equal(typeof parsedComponents.set, 'function');
+    // checks that we are only parsing components using the supported namespaces
+    st.equal(parsedComponents.size, goalParsedComponents);
+
+    st.end();
+  });
 
   t.end();
 });

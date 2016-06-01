@@ -18,6 +18,7 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "eslint-plugin-react": "^5.1.1",
+    "eslint-watch": "^2.1.11",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.17.0",
     "lodash-webpack-plugin": "^0.9.1",
@@ -34,8 +35,9 @@
     "start": "webpack-dev-server",
     "build": "webpack",
     "stats": "webpack --profile --json > stats.json",
-    "test-local": "webpack --config webpack.test.config.js --watch | testem",
+    "test:lint-local": "esw . --ext .js --ext .jsx --ignore-path ''",
     "test:lint": "eslint . --ext .js --ext .jsx --ignore-path",
+    "test-local": "webpack --config webpack.test.config.js --watch | testem",
     "test": "webpack --config webpack.test.config.js | testem ci --launch PhantomJS | npm run test:lint"
   },
   "author": "Francisco Ramini",

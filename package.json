@@ -13,6 +13,11 @@
     "babel-plugin-lodash": "^3.1.4",
     "babel-preset-es2015": "^6.9.0",
     "clean-webpack-plugin": "^0.1.9",
+    "eslint": "^2.11.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.2.2",
+    "eslint-plugin-react": "^5.1.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.17.0",
     "lodash-webpack-plugin": "^0.9.1",
@@ -30,7 +35,8 @@
     "build": "webpack",
     "stats": "webpack --profile --json > stats.json",
     "test-local": "webpack --config webpack.test.config.js --watch | testem",
-    "test": "webpack --config webpack.test.config.js | testem ci --launch PhantomJS"
+    "test:lint": "eslint . --ext .js --ext .jsx --ignore-path",
+    "test": "webpack --config webpack.test.config.js | testem ci --launch PhantomJS | npm run test:lint"
   },
   "author": "Francisco Ramini",
   "license": "ISC"

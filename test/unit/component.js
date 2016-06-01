@@ -1,32 +1,33 @@
 import test from 'tape';
 import component from '../../src/component';
-import { forEach } from 'lodash';
 
-test.skip('component exposes the expected API', t => {
+test('component exposes the expected API', t => {
   const cmp = component();
   t.equal(typeof cmp.parseComponents, 'function', 'parseComponents is a method');
-  t.equal(typeof cmp._selectComponents, 'function', '_selectComponents is a method');
-  t.equal(typeof cmp._parseComponentOptions, 'function', '_parseComponentOptions is a method');
+  t.equal(typeof cmp.__selectComponents, 'function', '__selectComponents is a method');
+  t.equal(typeof cmp.__parseComponentOptions, 'function', '__parseComponentOptions is a method');
   t.equal(typeof cmp.initComponent, 'function', 'initComponent is a method');
+  t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
 
   t.end();
 });
 
-test('parseComponents method returns an array of components', t => {
+test('parseComponents method returns a Map of components', t => {
   const cmp = component();
   // mock of a possible config object
   const config = {
-    namespaces: ['bar', 'foo']
+    namespaces: ['bar', 'foo'],
   };
   const content = [];
   // array to hold all the generated names for the components
   const cmpsNames = [];
   const amountCmps = [...Array(10).keys()];
-  // helper variable to keep track of the number of components that shouldn't be parsed by the method
+  // helper variable to keep track of the number of components that shouldn't be
+  // parsed by the method
   let notToBeParsed = 0;
 
   // generates test data (in this case, an array of DOM elements)
-  amountCmps.forEach(i => {
+  amountCmps.forEach(() => {
     const div = document.createElement('div');
     const randomIndex = Math.floor((Math.random() * config.namespaces.length));
     // grabs a random namespace from the passed config
@@ -46,9 +47,9 @@ test('parseComponents method returns an array of components', t => {
     div.dataset[compDef] = cmpName;
     div.dataset[objDef] = JSON.stringify({
       bar: 'foo',
-      foo: 'baz'
+      foo: 'baz',
     });
-    div.dataset[arrDef] = JSON.stringify([1,2]);
+    div.dataset[arrDef] = JSON.stringify([1, 2]);
     div.dataset[strDef] = 'baz';
 
     content.push(div);
@@ -62,49 +63,59 @@ test('parseComponents method returns an array of components', t => {
    */
   const goalParsedComponents = amountCmps.length - notToBeParsed;
 
-  t.skip('_selectComponents should return an array of DOM elements to be parsed', st => {
-    const componentsToBeParsed = cmp._selectComponents(content);
+  t.test('__selectComponents should return an array of DOM elements to be parsed', st => {
+    // test the 2 different ways of using this method. Passing an array of DOM elem or
+    // passing a selector
+    const componentsToBeParsedUsingContent = cmp.__selectComponents({
+      namespaces: config.namespaces,
+      content,
+    });
+    const componentsToBeParsedUsingSelector = cmp.__selectComponents({
+      namespaces: config.namespaces,
+    });
+
     // checks if it is a Set
     // TODO: review if there is a better way to validate this
-    st.equal(typeof componentsToBeParsed, 'object');
-    st.equal(typeof componentsToBeParsed.add, 'function');
-    st.equal(typeof componentsToBeParsed.has, 'function');
+    st.equal(typeof componentsToBeParsedUsingContent, 'object');
+    st.equal(typeof componentsToBeParsedUsingContent.add, 'function');
+    st.equal(typeof componentsToBeParsedUsingContent.has, 'function');
     // checks that we are only parsing components using the supported namespaces
-    st.equal(componentsToBeParsed.size, goalParsedComponents);
+    st.equal(componentsToBeParsedUsingContent.size, goalParsedComponents);
+
+    // checks if it is a Set
+    // TODO: review if there is a better way to validate this
+    st.equal(typeof componentsToBeParsedUsingSelector, 'object');
+    st.equal(typeof componentsToBeParsedUsingSelector.add, 'function');
+    st.equal(typeof componentsToBeParsedUsingSelector.has, 'function');
+    // checks that we are only parsing components using the supported namespaces
+    st.equal(componentsToBeParsedUsingSelector.size, goalParsedComponents);
 
     st.end();
   });
 
-  t.skip('_parseComponentOptions should return an object', st => {
+  t.test('__parseComponentOptions should return an object', st => {
     // this should return a set
-    const componentsToBeParsed = cmp._selectComponents(content);
+    const componentsToBeParsed = cmp.__selectComponents({
+      namespaces: config.namespaces,
+      content,
+    });
     const comps = [...componentsToBeParsed];
     // we are just going to pass only one component. in this case, the first parsed
-    const parsedComponentOptions = cmp._parseComponentOptions(comps[0]);
-    st.equal(componentsToBeParsed.length, parsedComponentOptions.length);
+    const parsedComponentOptions = cmp.__parseComponentOptions(comps[0]);
 
+    st.equal(typeof parsedComponentOptions, 'object');
+    st.ok(parsedComponentOptions.name, 'the parsed component has a ´name´ property');
+    st.ok(parsedComponentOptions.options, 'the parsed component has a ´options´ property');
     // checks if it is a Map
     // TODO: review if there is a better way to validate this
-    st.equal(typeof parsedComponentOptions, 'object');
-    st.equal(typeof parsedComponentOptions.clear, 'function');
-    st.equal(typeof parsedComponentOptions.set, 'function');
-
-    parsedComponentOptions.forEach(cmp => {
-      st.ok(cmp.name, 'the parsed component has a ´name´ property');
-      st.ok(cmp.options, 'the parsed component has a ´options´ property');
-      st.equal(typeof cmp.options, 'object', 'the options property should be an oject');
-      // options API
-      st.equal(typeof cmp.options.get, 'function');
-      st.equal(typeof cmp.options.getEl, 'function');
-      st.equal(typeof cmp.options.size, 'function');
-      // the options obj should only include properties defined by the user through the data-* API
-      st.equal(cmp.options.size, 'object', 'the options obj should have a lenght of 3');
-      // supported types object, array and string
-      st.equal(typeof cmp.options.get('obj'), 'object');
-      st.equal(typeof cmp.options.get('arr'), 'array');
-      st.equal(typeof cmp.options.get('str'), 'string');
-      st.end();
-    });
+    st.equal(typeof parsedComponentOptions.options, 'object');
+    st.equal(typeof parsedComponentOptions.options.clear, 'function');
+    st.equal(typeof parsedComponentOptions.options.set, 'function');
+    st.equal(parsedComponentOptions.options.size, 3, 'the options obj should have a lenght of 3');
+    // supported types object, array and string
+    st.equal(typeof parsedComponentOptions.options.get('obj'), 'object');
+    st.ok(Array.isArray(parsedComponentOptions.options.get('arr')));
+    st.equal(typeof parsedComponentOptions.options.get('str'), 'string');
 
     st.end();
   });
@@ -119,6 +130,13 @@ test('parseComponents method returns an array of components', t => {
     // checks that we are only parsing components using the supported namespaces
     st.equal(parsedComponents.size, goalParsedComponents);
 
+    st.end();
+  });
+
+  t.skip('initComponent should initialize the parsed components', st => {
+    const initCmps = cmp.parseComponents(config);
+
+    st.equal(initCmps, cmp.getInitializedComponents());
     st.end();
   });
 

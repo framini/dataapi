@@ -35,7 +35,7 @@
     "start": "webpack-dev-server",
     "build": "webpack",
     "stats": "webpack --profile --json > stats.json",
-    "test:lint-local": "esw . --ext .js --ext .jsx --ignore-path ''",
+    "test:lint-local": "esw . --ext .js --ext .jsx --ignore-path '' -w",
     "test:lint": "eslint . --ext .js --ext .jsx --ignore-path",
     "test-local": "webpack --config webpack.test.config.js --watch | testem",
     "test": "webpack --config webpack.test.config.js | testem ci --launch PhantomJS | npm run test:lint"

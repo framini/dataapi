@@ -41,7 +41,9 @@ switch (process.env.npm_lifecycle_event) {
           filename: 'dataapi.js',
           // This is used for require.ensure. The setup
           // will work without but this is useful to set.
-          chunkFilename: '[chunkhash].js'
+          chunkFilename: '[chunkhash].js',
+          library: 'dataapi',
+          libraryTarget: 'umd'
         }
       },
       parts.babel(PATHS.app),

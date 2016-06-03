@@ -128,7 +128,7 @@ function parseComponents(cfg, options) {
   return cache;
 }
 
-export default function componentParser(cfg) {
+export default function ComponentParser(cfg) {
   const config = Object.assign({}, {
     cache: new Map(),
   }, cfg);

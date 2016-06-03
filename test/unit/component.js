@@ -6,7 +6,6 @@ test('component exposes the expected API', t => {
   t.equal(typeof cmp.parseComponents, 'function', 'parseComponents is a method');
   t.equal(typeof cmp.__selectComponents, 'function', '__selectComponents is a method');
   t.equal(typeof cmp.__parseComponentOptions, 'function', '__parseComponentOptions is a method');
-  t.equal(typeof cmp.initComponent, 'function', 'initComponent is a method');
   t.equal(typeof cmp.getParsedComponents, 'function', 'getParsedComponents is a method');
 
   t.end();

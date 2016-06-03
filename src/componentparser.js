@@ -107,10 +107,6 @@ function __parseComponentOptions(el) {
   };
 }
 
-function initComponent(cfg) {
-  console.log(cfg);
-}
-
 function getParsedComponents(cfg) {
   return cfg.cache;
 }
@@ -138,7 +134,6 @@ export default function component(cfg) {
   }, cfg);
 
   return {
-    initComponent: initComponent.bind(null, config),
     getParsedComponents: getParsedComponents.bind(null, config),
     parseComponents: parseComponents.bind(null, config),
     __parseComponentOptions,

@@ -24,6 +24,7 @@
     "lodash-webpack-plugin": "^0.9.1",
     "lodash.foreach": "^4.3.0",
     "phantomjs": "^2.1.7",
+    "sinon": "^2.0.0-pre",
     "tape": "^4.5.1",
     "testem": "^1.7.1",
     "webpack": "^1.13.1",

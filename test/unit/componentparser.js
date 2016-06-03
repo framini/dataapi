@@ -1,8 +1,8 @@
 import test from 'tape';
-import ComponentParser from '../../src/componentparser';
+import componentParser from '../../src/componentparser';
 
-test('ComponentParser exposes the expected API', t => {
-  const cmp = ComponentParser();
+test('componentParser exposes the expected API', t => {
+  const cmp = componentParser();
   t.equal(typeof cmp.parseComponents, 'function', 'parseComponents is a method');
   t.equal(typeof cmp.__selectComponents, 'function', '__selectComponents is a method');
   t.equal(typeof cmp.__parseComponentOptions, 'function', '__parseComponentOptions is a method');
@@ -16,7 +16,7 @@ test('parseComponents method returns a Map of components', t => {
   const config = {
     namespaces: ['bar', 'foo'],
   };
-  const cmp = ComponentParser(config);
+  const cmp = componentParser(config);
   const content = [];
   // array to hold all the generated names for the components
   const cmpsNames = [];

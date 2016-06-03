@@ -1,18 +1,6 @@
-import { forEach } from 'lodash';
+import { forEach as _forEach } from 'lodash';
 
-function initComponent() {
-}
-
-function getInitializedComponents() {
-}
-
-function parseComponents() {
-}
-
-function __selectComponents(options = {
-  parentSelector: 'body',
-  namespaces: ['aapi'],
-}) {
+function __selectComponents(options) {
   let collection = null;
 
   if (options) {
@@ -25,7 +13,7 @@ function __selectComponents(options = {
         const ds = Object.assign({}, el.dataset);
         let allowedNamespace = false;
 
-        forEach(ds, (v, k) => {
+        _forEach(ds, (v, k) => {
           allowedNamespace = allowedNamespace ||
                              options.namespaces.some(ns => k.startsWith(`${ns}Component`));
         });
@@ -52,7 +40,6 @@ function __selectComponents(options = {
       if (parentSelector === null || parentSelector === undefined) {
         parentSelector = document.body;
       }
-
       collection = parentSelector.querySelectorAll(cssSelectors.join(','));
     }
   }
@@ -78,7 +65,7 @@ function __parseComponentOptions(el) {
   let namespace;
 
   if (ds) {
-    forEach(ds, (val, k) => {
+    _forEach(ds, (val, k) => {
       let prop = '';
       let propLower = '';
 
@@ -120,11 +107,40 @@ function __parseComponentOptions(el) {
   };
 }
 
-export default function component() {
+function initComponent(cfg) {
+  console.log(cfg);
+}
+
+function getInitializedComponents(cfg) {
+  return cfg.cache;
+}
+
+function parseComponents(cfg, options) {
+  const config = Object.assign({}, cfg, options);
+  const { cache } = cfg;
+  // this should return a set
+  const componentsToBeParsed = __selectComponents(config);
+
+  if (componentsToBeParsed && componentsToBeParsed.forEach) {
+    componentsToBeParsed.forEach(el => {
+      if (cache.has(el) === false) {
+        cache.set(el, __parseComponentOptions(el));
+      }
+    });
+  }
+
+  return cache;
+}
+
+export default function component(cfg) {
+  const config = Object.assign({}, {
+    cache: new Map(),
+  }, cfg);
+
   return {
-    initComponent,
-    getInitializedComponents,
-    parseComponents,
+    initComponent: initComponent.bind(null, config),
+    getInitializedComponents: getInitializedComponents.bind(null, config),
+    parseComponents: parseComponents.bind(null, config),
     __parseComponentOptions,
     __selectComponents,
   };

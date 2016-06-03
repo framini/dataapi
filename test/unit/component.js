@@ -1,5 +1,5 @@
 import test from 'tape';
-import component from '../../src/component';
+import component from '../../src/componentparser';
 
 test('component exposes the expected API', t => {
   const cmp = component();
@@ -7,7 +7,7 @@ test('component exposes the expected API', t => {
   t.equal(typeof cmp.__selectComponents, 'function', '__selectComponents is a method');
   t.equal(typeof cmp.__parseComponentOptions, 'function', '__parseComponentOptions is a method');
   t.equal(typeof cmp.initComponent, 'function', 'initComponent is a method');
-  t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
+  t.equal(typeof cmp.getParsedComponents, 'function', 'getParsedComponents is a method');
 
   t.end();
 });
@@ -136,7 +136,7 @@ test('parseComponents method returns a Map of components', t => {
   t.skip('initComponent should initialize the parsed components', st => {
     const initCmps = cmp.parseComponents(config);
 
-    st.equal(initCmps, cmp.getInitializedComponents());
+    st.equal(initCmps, cmp.getParsedComponents());
     st.end();
   });
 

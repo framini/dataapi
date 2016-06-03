@@ -1,13 +1,5 @@
-const dataapi = (config) => {
-  return {
-    defineSyncComponents,
-    start,
-    stop
-  }
-}
-
-function defineSyncComponents() {
-}
+import { defaults } from 'lodash';
+import component from './componentparser';
 
 function start() {
 }
@@ -15,4 +7,21 @@ function start() {
 function stop() {
 }
 
-module.exports = dataapi;
+function getInitializedComponents() {
+}
+
+export default function dataapi(cfg) {
+  const config = defaults(cfg, {
+    parentSelector: 'body',
+    namespaces: ['api'],
+  });
+  const c1 = component(config);
+
+  c1.parseComponents();
+
+  return {
+    start,
+    stop,
+    getInitializedComponents,
+  };
+}

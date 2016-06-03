@@ -13,11 +13,11 @@ test('component exposes the expected API', t => {
 });
 
 test('parseComponents method returns a Map of components', t => {
-  const cmp = component();
   // mock of a possible config object
   const config = {
     namespaces: ['bar', 'foo'],
   };
+  const cmp = component(config);
   const content = [];
   // array to hold all the generated names for the components
   const cmpsNames = [];
@@ -120,7 +120,7 @@ test('parseComponents method returns a Map of components', t => {
     st.end();
   });
 
-  t.skip('parsedComponents should return a Map', st => {
+  t.test('parsedComponents should return a Map', st => {
     const parsedComponents = cmp.parseComponents(config);
     // checks if it is a Map
     // TODO: review if there is a better way to validate this

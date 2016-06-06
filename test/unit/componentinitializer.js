@@ -93,6 +93,7 @@ test('initializes all the passed components by calling their respective method',
   });
 
   t.equal(typeof componentInitializer, 'function', 'componentInitializer is a function');
+  t.throws(componentInitializer, 'it should throw if the factories prop is missed');
   // checks that the returned value is a Map
   t.equal(typeof initComps, 'object', 'componentInitializer returns a map');
   t.equal(typeof initComps.getInitializedComponents, 'function', 'getInitializedComponents');

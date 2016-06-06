@@ -1,9 +1,9 @@
 import test from 'tape';
 import sinon from 'sinon';
-import componentInitializer from '../../src/componentinitializer';
+import componentHandler from '../../src/componenthandler';
 
-test('componentInitializer exposes the expected API', t => {
-  const cmp = componentInitializer({
+test('componentHandler exposes the expected API', t => {
+  const cmp = componentHandler({
     factories: new Map(),
     components: new Map(),
   });
@@ -87,21 +87,21 @@ test('initializes all the passed components by calling their respective method',
     ],
   ]);
 
-  const initComps = componentInitializer({
+  const initComps = componentHandler({
     factories,
     components,
   });
 
-  t.equal(typeof componentInitializer, 'function', 'componentInitializer is a function');
-  t.throws(componentInitializer, 'it should throw if the factories prop is missed');
+  t.equal(typeof componentHandler, 'function', 'componentHandler is a function');
+  t.throws(componentHandler, 'it should throw if the factories prop is missed');
   // checks that the returned value is a Map
-  t.equal(typeof initComps, 'object', 'componentInitializer returns a map');
+  t.equal(typeof initComps, 'object', 'componentHandler returns a map');
   t.equal(typeof initComps.getInitializedComponents, 'function', 'getInitializedComponents');
   t.equal(typeof initComps.getInitializedComponents(), 'object');
   t.equal(typeof initComps.getInitializedComponents().has, 'function');
   t.equal(initComps.getInitializedComponents().size, goalInitializedComponents, `
   number of initialized components should be ${goalInitializedComponents}`);
-  // we'll check that wathever is returned from componentInitializer call
+  // we'll check that wathever is returned from componentHandler call
   // it is what we are expecting
   t.ok(ret1.init.calledTwice, 'Bar factory was called 2 times');
   t.ok(ret1.init.calledWith(param1), 'Bar init called with param1 as a parameter');

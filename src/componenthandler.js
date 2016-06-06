@@ -26,7 +26,7 @@ function __initComponents(config) {
   return cache;
 }
 
-export default function componentInitializer(cfg) {
+export default function componentHandler(cfg) {
   const config = Object.assign({}, {
     cache: new Map(),
   }, cfg);

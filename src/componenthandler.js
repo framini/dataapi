@@ -26,6 +26,23 @@ function __initComponents(config) {
   return cache;
 }
 
+function stopComponents(config) {
+  const { cache } = config;
+
+  for (const [el, instance] of cache) {
+    // the stop method is not required at a component level, so we are gonna
+    // be checking for existance before calling it
+    if (typeof instance.stop === 'function') {
+      instance.stop();
+    }
+
+    // Removes the instance from the Map of initialized components
+    cache.delete(el);
+  }
+
+  return cache;
+}
+
 export default function componentHandler(cfg) {
   const config = Object.assign({}, {
     cache: new Map(),
@@ -35,5 +52,6 @@ export default function componentHandler(cfg) {
 
   return {
     getInitializedComponents: getInitializedComponents.bind(null, config),
+    stopComponents: stopComponents.bind(null, config),
   };
 }

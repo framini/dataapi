@@ -8,15 +8,16 @@ test('componentHandler exposes the expected API', t => {
     components: new Map(),
   });
   t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
+  t.equal(typeof cmp.stopComponents, 'function', 'stopComponents is a method');
   t.end();
 });
 
 test('initializes all the passed components by calling their respective method', t => {
   // since every call will return a new object, we'll have to mock
   // them this way in order to spy on their methods
-  const ret1 = { init: sinon.stub() };
+  const ret1 = { init: sinon.stub(), stop: sinon.stub() };
   const ret2 = { init: sinon.stub() };
-  const ret3 = { init: sinon.stub() };
+  const ret3 = { init: sinon.stub(), stop: sinon.stub() };
   // Factories (i.e modules definition)
   const Bar = () => ret1;
   const Foo = () => ret2;
@@ -87,7 +88,7 @@ test('initializes all the passed components by calling their respective method',
     ],
   ]);
 
-  const initComps = componentHandler({
+  const compHandler = componentHandler({
     factories,
     components,
   });
@@ -95,11 +96,11 @@ test('initializes all the passed components by calling their respective method',
   t.equal(typeof componentHandler, 'function', 'componentHandler is a function');
   t.throws(componentHandler, 'it should throw if the factories prop is missed');
   // checks that the returned value is a Map
-  t.equal(typeof initComps, 'object', 'componentHandler returns a map');
-  t.equal(typeof initComps.getInitializedComponents, 'function', 'getInitializedComponents');
-  t.equal(typeof initComps.getInitializedComponents(), 'object');
-  t.equal(typeof initComps.getInitializedComponents().has, 'function');
-  t.equal(initComps.getInitializedComponents().size, goalInitializedComponents, `
+  t.equal(typeof compHandler, 'object', 'componentHandler returns a map');
+  t.equal(typeof compHandler.getInitializedComponents, 'function', 'getInitializedComponents');
+  t.equal(typeof compHandler.getInitializedComponents(), 'object');
+  t.equal(typeof compHandler.getInitializedComponents().has, 'function');
+  t.equal(compHandler.getInitializedComponents().size, goalInitializedComponents, `
   number of initialized components should be ${goalInitializedComponents}`);
   // we'll check that wathever is returned from componentHandler call
   // it is what we are expecting
@@ -111,5 +112,9 @@ test('initializes all the passed components by calling their respective method',
   t.ok(ret2.init.calledWith(param4), 'Foo init called with param4 as a parameter');
   t.ok(ret3.init.calledOnce, 'Baz factory was called 1 time');
   t.ok(ret3.init.calledWith(param5), 'Baz init called with param5 as a parameter');
+  t.equal(compHandler.stopComponents().size, 0, `
+  there should no components left in the Map of initialized components`);
+  t.ok(ret1.stop.calledTwice,  'Bar stop method was called twice');
+  t.ok(ret3.stop.calledOnce, 'Baz stop method was called once');
   t.end();
 });

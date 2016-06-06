@@ -3,12 +3,15 @@ import sinon from 'sinon';
 import componentInitializer from '../../src/componentinitializer';
 
 test('componentInitializer exposes the expected API', t => {
-  const cmp = componentInitializer();
+  const cmp = componentInitializer({
+    factories: new Map(),
+    components: new Map()
+  });
   t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
   t.end();
 });
 
-test.skip('componentInitializer exposes the expected API', t => {
+test('initializes all the passed components by calling their respective method', t => {
   // since every call will return a new object, we'll have to mock
   // them this way in order to spy on their methods
   const ret1 = { init: sinon.stub() };
@@ -92,18 +95,19 @@ test.skip('componentInitializer exposes the expected API', t => {
   t.equal(typeof componentInitializer, 'function', 'componentInitializer is a function');
   // checks that the returned value is a Map
   t.equal(typeof initComps, 'object', 'componentInitializer returns a map');
-  t.equal(typeof initComps.add, 'function');
-  t.equal(typeof initComps.has, 'function');
-  t.equal(initComps.size, goalInitializedComponents);
+  t.equal(typeof initComps.getInitializedComponents, 'function', 'getInitializedComponents');
+  t.equal(typeof initComps.getInitializedComponents(), 'object');
+  t.equal(typeof initComps.getInitializedComponents().has, 'function');
+  t.equal(initComps.getInitializedComponents().size, goalInitializedComponents, `number of initialized components should be ${goalInitializedComponents}`);
   // we'll check that wathever is returned from componentInitializer call
   // it is what we are expecting
   t.ok(ret1.init.calledTwice, 'Bar factory was called 2 times');
-  t.ok(ret1.init.onFirstCall().calledWith(param1));
-  t.ok(ret1.init.onSecondCall().calledWith(param2));
+  t.ok(ret1.init.calledWith(param1), 'Bar init called with param1 as a parameter');
+  t.ok(ret1.init.calledWith(param2), 'Bar init called with param2 as a parameter');
   t.ok(ret2.init.calledTwice, 'Foo factory was called 2 times');
-  t.ok(ret2.init.onFirstCall().calledWith(param3));
-  t.ok(ret2.init.onSecondCall().calledWith(param4));
+  t.ok(ret2.init.calledWith(param3), 'Foo init called with param3 as a parameter');
+  t.ok(ret2.init.calledWith(param4), 'Foo init called with param4 as a parameter');
   t.ok(ret3.init.calledOnce, 'Baz factory was called 1 time');
-  t.ok(ret3.init.onFirstCall().calledWith(param5));
+  t.ok(ret3.init.calledWith(param5), 'Baz init called with param5 as a parameter');
   t.end();
 });

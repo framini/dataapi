@@ -5,7 +5,7 @@ import componentInitializer from '../../src/componentinitializer';
 test('componentInitializer exposes the expected API', t => {
   const cmp = componentInitializer({
     factories: new Map(),
-    components: new Map()
+    components: new Map(),
   });
   t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
   t.end();
@@ -98,7 +98,8 @@ test('initializes all the passed components by calling their respective method',
   t.equal(typeof initComps.getInitializedComponents, 'function', 'getInitializedComponents');
   t.equal(typeof initComps.getInitializedComponents(), 'object');
   t.equal(typeof initComps.getInitializedComponents().has, 'function');
-  t.equal(initComps.getInitializedComponents().size, goalInitializedComponents, `number of initialized components should be ${goalInitializedComponents}`);
+  t.equal(initComps.getInitializedComponents().size, goalInitializedComponents, `
+  number of initialized components should be ${goalInitializedComponents}`);
   // we'll check that wathever is returned from componentInitializer call
   // it is what we are expecting
   t.ok(ret1.init.calledTwice, 'Bar factory was called 2 times');

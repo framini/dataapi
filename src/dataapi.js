@@ -3,6 +3,7 @@ import componentParser from './componentparser';
 import componentHandler from './componenthandler';
 
 function start(cfg) {
+  const { cache, internalCache } = cfg;
   const call = new Promise((resolve, rejected) => {
     const config = defaults(cfg, {
       resolve,
@@ -17,9 +18,8 @@ function start(cfg) {
 
     try {
       components = componentHandler(config);
-      cache.set('componentHandler', components);
+      internalCache.set('componentHandler', components);
       const initializedComponents = components.getInitializedComponents();
-      cache.set('initializedComponents', initializedComponents);
       resolve(initializedComponents);
     } catch (e) {
       rejected(e);
@@ -31,8 +31,8 @@ function start(cfg) {
 
 function stop(config) {
   const call = new Promise((resolve, rejected) => {
-    const { cache } = config;
-    const componentHandler = cache.get('componentHandler');
+    const { internalCache } = config;
+    const componentHandler = internalCache.get('componentHandler');
 
     if (componentHandler === undefined) {
       throw new Error(`Whether you are calling .stop() before .start() or there
@@ -52,8 +52,8 @@ function stop(config) {
 
 function getInitializedComponents(config) {
   const call = new Promise((resolve, rejected) => {
-    const { cache } = config;
-    const initializedComponents = cache.get('initializedComponents');
+    const { internalCache } = config;
+    const initializedComponents = internalCache.getInitializedComponents();
 
     if (initializedComponents === undefined) {
       throw new Error(`Whether you are .getInitializedComponents() before .start() or there
@@ -71,11 +71,15 @@ function getInitializedComponents(config) {
 }
 
 export default function dataapi(cfg) {
+  // this one will be exposed to the end user
   const cache = new Map();
+  // this one will be private to the module
+  const internalCache = new Map();
   const config = defaults(cfg, {
     parentSelector: 'body',
     namespaces: ['api'],
-    cache
+    cache,
+    internalCache
   });
 
   return {

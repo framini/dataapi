@@ -3,7 +3,7 @@ import componentParser from './componentparser';
 import componentHandler from './componenthandler';
 
 function start(cfg) {
-  const { cache, internalCache } = cfg;
+  const { internalCache } = cfg;
   const call = new Promise((resolve, rejected) => {
     const config = defaults(cfg, {
       resolve,
@@ -32,15 +32,15 @@ function start(cfg) {
 function stop(config) {
   const call = new Promise((resolve, rejected) => {
     const { internalCache } = config;
-    const componentHandler = internalCache.get('componentHandler');
+    const compHandler = internalCache.get('componentHandler');
 
-    if (componentHandler === undefined) {
+    if (compHandler === undefined) {
       throw new Error(`Whether you are calling .stop() before .start() or there
       aren\'t any component to stop`);
     }
 
     try {
-      componentHandler.stopComponents();
+      compHandler.stopComponents();
       resolve(true);
     } catch (e) {
       rejected(e);
@@ -53,15 +53,15 @@ function stop(config) {
 function getInitializedComponents(config) {
   const call = new Promise((resolve, rejected) => {
     const { internalCache } = config;
-    const componentHandler = internalCache.get('componentHandler');
+    const compHandler = internalCache.get('componentHandler');
 
-    if (componentHandler === undefined) {
+    if (compHandler === undefined) {
       throw new Error(`Whether you are calling .getInitializedComponents() before .start() or there
       aren\'t any component to stop`);
     }
 
     try {
-      resolve(componentHandler.getInitializedComponents());
+      resolve(compHandler.getInitializedComponents());
     } catch (e) {
       rejected(e);
     }
@@ -73,15 +73,15 @@ function getInitializedComponents(config) {
 function getSkippedComponents(config) {
   const call = new Promise((resolve, rejected) => {
     const { internalCache } = config;
-    const componentHandler = internalCache.get('componentHandler');
+    const compHandler = internalCache.get('componentHandler');
 
-    if (componentHandler === undefined) {
+    if (compHandler === undefined) {
       throw new Error(`Whether you are calling .getSkippedComponents() before .start() or there
       aren\'t any component to stop`);
     }
 
     try {
-      resolve(componentHandler.getSkippedComponents());
+      resolve(compHandler.getSkippedComponents());
     } catch (e) {
       rejected(e);
     }
@@ -99,7 +99,7 @@ export default function dataapi(cfg) {
     parentSelector: 'body',
     namespaces: ['api'],
     cache,
-    internalCache
+    internalCache,
   });
 
   return {

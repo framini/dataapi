@@ -552,11 +552,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return m[0].toLowerCase();
 	}
 	
+	function __toCamelCase(s, dashChar) {
+	  return s.replace(dashChar, function (m, l) {
+	    return l.toUpperCase();
+	  });
+	}
+	
 	function __parseComponentOptions(el) {
-	  var ds = Object.assign({}, el.dataset);
 	  var options = new Map();
 	  var name = void 0;
 	  var namespace = void 0;
+	  var dataset = {};
+	
+	  if (el.dataset !== undefined) {
+	    dataset = el.dataset;
+	  } else {
+	    (function () {
+	      // for browsers not supporting the .dataset property (IE10 or lower)
+	      var regex = /^data-(.+)/;
+	      var dashChar = /\-([a-z])/ig;
+	      var match = void 0;
+	      var forEach = [].forEach;
+	      dataset = {};
+	      if (el.hasAttributes()) {
+	        forEach.call(el.attributes, function (attr) {
+	          match = attr.name.match(regex);
+	          if (match) {
+	            dataset[__toCamelCase(match[1], dashChar)] = attr.value;
+	          }
+	        });
+	      }
+	    })();
+	  }
+	  var ds = Object.assign({}, dataset);
 	
 	  if (ds) {
 	    (0, _forEach4.default)(ds, function (val, k) {

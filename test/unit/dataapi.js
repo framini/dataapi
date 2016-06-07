@@ -125,24 +125,23 @@ test('API return values', t => {
     });
   });
 
-  t.test('return value of the stop method', st => {
-    d.stop().then((status) => {
-      st.ok(status);
+  t.test('return value of the getSkippedComponents method', st => {
+    d.getSkippedComponents().then((skippedComponents) => {
+      st.equal(skippedComponents.size, 2);
       st.end()
     });
   });
 
   t.test('return value of the getInitializedComponents method', st => {
-    d.getInitializedComponents().then((initializedComponents) => {
-      console.log('--------initializedComponents', initializedComponents.size)
-      st.equal(initializedComponents.size, 4);
+    d.getInitializedComponents().then((pepe) => {
+      st.equal(pepe.size, 4);
       st.end()
     });
   });
 
-  t.test('return value of the getSkippedComponents method', st => {
-    d.getSkippedComponents().then((skippedComponents) => {
-      st.equal(skippedComponents.size, 2);
+  t.test('return value of the stop method', st => {
+    d.stop().then((status) => {
+      st.ok(status);
       st.end()
     });
   });

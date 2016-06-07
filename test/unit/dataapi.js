@@ -43,8 +43,10 @@ test('API return values', t => {
   const div4 = document.createElement('div');
   const div5 = document.createElement('div');
   const div6 = document.createElement('div');
-  // Goal of components to be parsed (DOM elements defined above)
-  const goalInitializedComponents = 5;
+  // Goal of components to be initialized
+  const goalInitializedComponents = 4;
+  // Goal of components to be skipped (because they dont have a Factory associated)
+  const goalSkippedComponents = 2;
   // Factories (these modules ideally will be imported in the module calling this one)
   const factories = new Map([['Bar', Bar], ['Foo', Foo]]);
   // options obj
@@ -120,21 +122,21 @@ test('API return values', t => {
 
   t.test('return value of the start method', st => {
     d.start().then((initializedComponents) => {
-      st.equal(initializedComponents.size, 4);
+      st.equal(initializedComponents.size, goalInitializedComponents);
       st.end()
     });
   });
 
   t.test('return value of the getSkippedComponents method', st => {
     d.getSkippedComponents().then((skippedComponents) => {
-      st.equal(skippedComponents.size, 2);
+      st.equal(skippedComponents.size, goalSkippedComponents);
       st.end()
     });
   });
 
   t.test('return value of the getInitializedComponents method', st => {
-    d.getInitializedComponents().then((pepe) => {
-      st.equal(pepe.size, 4);
+    d.getInitializedComponents().then((initializedComponents) => {
+      st.equal(initializedComponents.size, goalInitializedComponents);
       st.end()
     });
   });
@@ -142,6 +144,13 @@ test('API return values', t => {
   t.test('return value of the stop method', st => {
     d.stop().then((status) => {
       st.ok(status);
+      st.end()
+    });
+  });
+
+  t.test('return value of the getInitializedComponents method after calling the .stop method', st => {
+    d.getInitializedComponents().then((initializedComponents) => {
+      st.equal(initializedComponents.size, 0);
       st.end()
     });
   });

@@ -8,7 +8,7 @@ function getSkippedComponents(config) {
 
 function __initComponents(config) {
   // all of them should be Maps
-  const { factories, components, options, internalCache } = config;
+  const { factories, components, internalCache, shared } = config;
 
   if (factories === undefined ||
       typeof factories !== 'object' ||
@@ -21,8 +21,8 @@ function __initComponents(config) {
     const compName = obj.name;
     const factory = factories.get(compName);
     if (factory !== undefined) {
-      const instance = factory(options);
-      instance.init(obj);
+      const instance = factory(obj);
+      instance.init(obj, shared);
       // this map is gonna keep track of initialized components for internal usage
       if (internalCache.get('initializedComponents') === undefined) {
         internalCache.set('initializedComponents', new Map());

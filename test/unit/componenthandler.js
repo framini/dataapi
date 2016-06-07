@@ -8,6 +8,7 @@ test('componentHandler exposes the expected API', t => {
     components: new Map(),
   });
   t.equal(typeof cmp.getInitializedComponents, 'function', 'getInitializedComponents is a method');
+  t.equal(typeof cmp.getSkippedComponents, 'function', 'getSkippedComponents is a method');
   t.equal(typeof cmp.stopComponents, 'function', 'stopComponents is a method');
   t.end();
 });

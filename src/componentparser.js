@@ -58,11 +58,35 @@ function __getComponentNamespace(key) {
   return m[0].toLowerCase();
 }
 
+function __toCamelCase(s, dashChar) {
+  return s.replace(dashChar, (m, l) => l.toUpperCase());
+}
+
 function __parseComponentOptions(el) {
-  const ds = Object.assign({}, el.dataset);
   const options = new Map();
   let name;
   let namespace;
+  let dataset = {};
+
+  if (el.dataset !== undefined) {
+    dataset = el.dataset;
+  } else {
+    // for browsers not supporting the .dataset property (IE10 or lower)
+    const regex = /^data-(.+)/;
+    const dashChar = /\-([a-z])/ig;
+    let match;
+    const forEach = [].forEach;
+    dataset = {};
+    if (el.hasAttributes()) {
+      forEach.call(el.attributes, attr => {
+        match = attr.name.match(regex);
+        if (match) {
+          dataset[__toCamelCase(match[1], dashChar)] = attr.value;
+        }
+      });
+    }
+  }
+  const ds = Object.assign({}, dataset);
 
   if (ds) {
     _forEach(ds, (val, k) => {

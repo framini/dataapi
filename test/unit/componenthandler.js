@@ -109,15 +109,16 @@ test('initializes all the passed components by calling their respective method',
   t.throws(componentHandler, 'it should throw if the factories prop is missed');
   // checks that the returned value is a Map
   t.equal(typeof compHandler, 'object', 'componentHandler returns an object');
+  // initialized components checkups
   t.equal(typeof compHandler.getInitializedComponents, 'function', 'getInitializedComponents');
   t.equal(typeof compHandler.getInitializedComponents(), 'object');
   t.equal(typeof compHandler.getInitializedComponents().has, 'function');
   t.equal(compHandler.getInitializedComponents().size, goalInitializedComponents, `
   number of initialized components should be ${goalInitializedComponents}`);
+  // skipped components checkups
   t.equal(typeof compHandler.getSkippedComponents, 'function', 'getSkippedComponents');
   t.equal(typeof compHandler.getSkippedComponents(), 'object');
   t.equal(typeof compHandler.getSkippedComponents().has, 'function');
-  console.log('-----------------------------', JSON.stringify(compHandler.getSkippedComponents().size));
   t.equal(compHandler.getSkippedComponents().size, 1, `
   number of skipped components should be ${1}`);
   // we'll check that wathever is returned from componentHandler call
@@ -132,7 +133,7 @@ test('initializes all the passed components by calling their respective method',
   t.ok(ret3.init.calledWith(param5), 'Baz init called with param5 as a parameter');
   t.equal(compHandler.stopComponents().size, 0, `
   there should no components left in the Map of initialized components`);
-  t.ok(ret1.stop.calledTwice,  'Bar stop method was called twice');
+  t.ok(ret1.stop.calledTwice, 'Bar stop method was called twice');
   t.ok(ret3.stop.calledOnce, 'Baz stop method was called once');
   t.end();
 });

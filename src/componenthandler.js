@@ -8,7 +8,7 @@ function getSkippedComponents(config) {
 
 function __initComponents(config) {
   // all of them should be Maps
-  const { factories, components, options, cache, internalCache } = config;
+  const { factories, components, options, internalCache } = config;
 
   if (factories === undefined ||
       typeof factories !== 'object' ||
@@ -23,12 +23,10 @@ function __initComponents(config) {
     if (factory !== undefined) {
       const instance = factory(options);
       instance.init(obj);
-      cache.set(el, instance);
       // this map is gonna keep track of initialized components for internal usage
       if (internalCache.get('initializedComponents') === undefined) {
         internalCache.set('initializedComponents', new Map());
       }
-
       internalCache.get('initializedComponents').set(el, instance);
     } else {
       // this map is gonna keep track of skipped components (i.e components that
@@ -41,13 +39,14 @@ function __initComponents(config) {
     }
   }
 
-  return cache;
+  return internalCache.get('initializedComponents');
 }
 
 function stopComponents(config) {
-  const { cache } = config;
+  const { internalCache } = config;
+  const initializedComponents = internalCache.get('initializedComponents');
 
-  for (const [el, instance] of cache) {
+  for (const [el, instance] of initializedComponents) {
     // the stop method is not required at a component level, so we are gonna
     // be checking for existance before calling it
     if (typeof instance.stop === 'function') {
@@ -55,15 +54,14 @@ function stopComponents(config) {
     }
 
     // Removes the instance from the Map of initialized components
-    cache.delete(el);
+    initializedComponents.delete(el);
   }
 
-  return cache;
+  return internalCache.get('initializedComponents');
 }
 
 export default function componentHandler(cfg) {
   const config = Object.assign({}, {
-    cache: new Map(),
     internalCache: new Map(),
   }, cfg);
 

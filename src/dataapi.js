@@ -53,15 +53,35 @@ function stop(config) {
 function getInitializedComponents(config) {
   const call = new Promise((resolve, rejected) => {
     const { internalCache } = config;
-    const initializedComponents = internalCache.getInitializedComponents();
+    const componentHandler = internalCache.get('componentHandler');
 
-    if (initializedComponents === undefined) {
-      throw new Error(`Whether you are .getInitializedComponents() before .start() or there
-      aren\'t any initialized components`);
+    if (componentHandler === undefined) {
+      throw new Error(`Whether you are calling .getInitializedComponents() before .start() or there
+      aren\'t any component to stop`);
     }
 
     try {
-      resolve(initializedComponents);
+      resolve(componentHandler.getInitializedComponents());
+    } catch (e) {
+      rejected(e);
+    }
+  });
+
+  return call;
+}
+
+function getSkippedComponents(config) {
+  const call = new Promise((resolve, rejected) => {
+    const { internalCache } = config;
+    const componentHandler = internalCache.get('componentHandler');
+
+    if (componentHandler === undefined) {
+      throw new Error(`Whether you are calling .getSkippedComponents() before .start() or there
+      aren\'t any component to stop`);
+    }
+
+    try {
+      resolve(componentHandler.getSkippedComponents());
     } catch (e) {
       rejected(e);
     }
@@ -86,5 +106,6 @@ export default function dataapi(cfg) {
     start: start.bind(null, config),
     stop: stop.bind(null, config),
     getInitializedComponents: getInitializedComponents.bind(null, config),
+    getSkippedComponents: getSkippedComponents.bind(null, config),
   };
 }

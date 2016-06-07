@@ -1,5 +1,5 @@
 function getInitializedComponents(config) {
-  return config.cache;
+  return config.internalCache.get('initializedComponents');
 }
 
 function getSkippedComponents(config) {
@@ -24,6 +24,12 @@ function __initComponents(config) {
       const instance = factory(options);
       instance.init(obj);
       cache.set(el, instance);
+      // this map is gonna keep track of initialized components for internal usage
+      if (internalCache.get('initializedComponents') === undefined) {
+        internalCache.set('initializedComponents', new Map());
+      }
+
+      internalCache.get('initializedComponents').set(el, instance);
     } else {
       // this map is gonna keep track of skipped components (i.e components that
       // were defined using a Factory function that hasn't been defined)

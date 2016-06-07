@@ -2,9 +2,13 @@ function getInitializedComponents(config) {
   return config.cache;
 }
 
+function getSkippedComponents(config) {
+  return config.internalCache.get('skippedComponents');
+}
+
 function __initComponents(config) {
   // all of them should be Maps
-  const { factories, components, options, cache } = config;
+  const { factories, components, options, cache, internalCache } = config;
 
   if (factories === undefined ||
       typeof factories !== 'object' ||
@@ -20,6 +24,14 @@ function __initComponents(config) {
       const instance = factory(options);
       instance.init(obj);
       cache.set(el, instance);
+    } else {
+      // this map is gonna keep track of skipped components (i.e components that
+      // were defined using a Factory function that hasn't been defined)
+      if (internalCache.get('skippedComponents') === undefined) {
+        internalCache.set('skippedComponents', new Map());
+      }
+
+      internalCache.get('skippedComponents').set(el, compName);
     }
   }
 
@@ -46,12 +58,14 @@ function stopComponents(config) {
 export default function componentHandler(cfg) {
   const config = Object.assign({}, {
     cache: new Map(),
+    internalCache: new Map(),
   }, cfg);
 
   __initComponents(config);
 
   return {
     getInitializedComponents: getInitializedComponents.bind(null, config),
+    getSkippedComponents: getSkippedComponents.bind(null, config),
     stopComponents: stopComponents.bind(null, config),
   };
 }

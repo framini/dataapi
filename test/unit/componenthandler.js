@@ -28,6 +28,7 @@ test('initializes all the passed components by calling their respective method',
   const div3 = document.createElement('div');
   const div4 = document.createElement('div');
   const div5 = document.createElement('div');
+  const div6 = document.createElement('div');
   // Goal of components to be parsed (DOM elements defined above)
   const goalInitializedComponents = 5;
   // Factories (these modules ideally will be imported in the module calling this one)
@@ -38,6 +39,7 @@ test('initializes all the passed components by calling their respective method',
   const opt3 = new Map([['foo3', 'bar 333']]);
   const opt4 = new Map([['baz3', 'buz 4']]);
   const opt5 = new Map([['fooooo', 'bar ooooo']]);
+  const opt6 = new Map([['fooxx', 'bar xxxx']]);
   // params
   const param1 = {
     name: 'Bar',
@@ -64,6 +66,11 @@ test('initializes all the passed components by calling their respective method',
     el: div5,
     options: opt5,
   };
+  const param6 = {
+    name: 'Baznot',
+    el: div6,
+    options: opt6,
+  };
   // this a mock for the value returned from componentParser
   const components = new Map([
     [
@@ -86,6 +93,10 @@ test('initializes all the passed components by calling their respective method',
       div5,
       param5,
     ],
+    [
+      div6,
+      param6,
+    ],
   ]);
 
   const compHandler = componentHandler({
@@ -96,12 +107,18 @@ test('initializes all the passed components by calling their respective method',
   t.equal(typeof componentHandler, 'function', 'componentHandler is a function');
   t.throws(componentHandler, 'it should throw if the factories prop is missed');
   // checks that the returned value is a Map
-  t.equal(typeof compHandler, 'object', 'componentHandler returns a map');
+  t.equal(typeof compHandler, 'object', 'componentHandler returns an object');
   t.equal(typeof compHandler.getInitializedComponents, 'function', 'getInitializedComponents');
   t.equal(typeof compHandler.getInitializedComponents(), 'object');
   t.equal(typeof compHandler.getInitializedComponents().has, 'function');
   t.equal(compHandler.getInitializedComponents().size, goalInitializedComponents, `
   number of initialized components should be ${goalInitializedComponents}`);
+  t.equal(typeof compHandler.getSkippedComponents, 'function', 'getSkippedComponents');
+  t.equal(typeof compHandler.getSkippedComponents(), 'object');
+  t.equal(typeof compHandler.getSkippedComponents().has, 'function');
+  console.log('-----------------------------', JSON.stringify(compHandler.getSkippedComponents().size));
+  t.equal(compHandler.getSkippedComponents().size, 1, `
+  number of skipped components should be ${1}`);
   // we'll check that wathever is returned from componentHandler call
   // it is what we are expecting
   t.ok(ret1.init.calledTwice, 'Bar factory was called 2 times');

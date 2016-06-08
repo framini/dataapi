@@ -166,15 +166,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	function dataapi(cfg) {
-	  // this one will be exposed to the end user
-	  var cache = new Map();
 	  // this one will be private to the module
 	  var internalCache = new Map();
 	  var config = (0, _defaults3.default)(cfg, {
 	    factories: undefined, // required prop
 	    parentSelector: 'body',
 	    namespaces: ['api'],
-	    cache: cache,
 	    internalCache: internalCache,
 	    shared: undefined // shared Map to store shared functionality
 	  });

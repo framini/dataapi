@@ -91,15 +91,12 @@ function getSkippedComponents(config) {
 }
 
 export default function dataapi(cfg) {
-  // this one will be exposed to the end user
-  const cache = new Map();
   // this one will be private to the module
   const internalCache = new Map();
   const config = defaults(cfg, {
     factories: undefined, // required prop
     parentSelector: 'body',
     namespaces: ['api'],
-    cache,
     internalCache,
     shared: undefined // shared Map to store shared functionality
   });

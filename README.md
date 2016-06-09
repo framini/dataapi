@@ -1,4 +1,7 @@
 # Dataapi: WIP (not ready to use)
+=================
+[![Build Status](https://travis-ci.org/framini/dataapi.svg?branch=master)](https://travis-ci.org/framini/dataapi)
+
 ## Intro
 Basic module to declaratively define components using a `data-*` API.
 

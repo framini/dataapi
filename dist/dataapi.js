@@ -173,9 +173,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    parentSelector: 'body',
 	    namespaces: ['api'],
 	    internalCache: internalCache,
-	    shared: undefined // shared Map to store shared functionality
-	  });
+	    shared: undefined });
 	
+	  // shared Map to store shared functionality
 	  return {
 	    start: start.bind(null, config),
 	    stop: stop.bind(null, config),
@@ -488,6 +488,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
+	function __toCamelCase(s, dashChar) {
+	  return s.replace(dashChar, function (m, l) {
+	    return l.toUpperCase();
+	  });
+	}
+	
+	function __getDataset(el) {
+	  var dataset = {};
+	
+	  if (el && el.dataset !== undefined) {
+	    dataset = el.dataset;
+	  } else {
+	    (function () {
+	      // for browsers not supporting the .dataset property (IE10 or lower)
+	      var regex = /^data-(.+)/;
+	      var dashChar = /\-([a-z])/ig;
+	      var match = void 0;
+	      var forEach = [].forEach;
+	      dataset = {};
+	      if (el && el.hasAttributes()) {
+	        forEach.call(el.attributes, function (attr) {
+	          match = attr.name.match(regex);
+	          if (match) {
+	            dataset[__toCamelCase(match[1], dashChar)] = attr.value;
+	          }
+	        });
+	      }
+	    })();
+	  }
+	
+	  return dataset;
+	}
+	
 	function __selectComponents(options) {
 	  var collection = null;
 	
@@ -498,7 +531,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * namespace
 	       */
 	      collection = options.content.filter(function (el) {
-	        var ds = Object.assign({}, el.dataset);
+	        var dataset = __getDataset(el);
+	        var ds = Object.assign({}, dataset);
 	        var allowedNamespace = false;
 	
 	        (0, _forEach4.default)(ds, function (v, k) {
@@ -549,38 +583,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return m[0].toLowerCase();
 	}
 	
-	function __toCamelCase(s, dashChar) {
-	  return s.replace(dashChar, function (m, l) {
-	    return l.toUpperCase();
-	  });
-	}
-	
 	function __parseComponentOptions(el) {
 	  var options = new Map();
 	  var name = void 0;
 	  var namespace = void 0;
-	  var dataset = {};
-	
-	  if (el.dataset !== undefined) {
-	    dataset = el.dataset;
-	  } else {
-	    (function () {
-	      // for browsers not supporting the .dataset property (IE10 or lower)
-	      var regex = /^data-(.+)/;
-	      var dashChar = /\-([a-z])/ig;
-	      var match = void 0;
-	      var forEach = [].forEach;
-	      dataset = {};
-	      if (el.hasAttributes()) {
-	        forEach.call(el.attributes, function (attr) {
-	          match = attr.name.match(regex);
-	          if (match) {
-	            dataset[__toCamelCase(match[1], dashChar)] = attr.value;
-	          }
-	        });
-	      }
-	    })();
-	  }
+	  var dataset = __getDataset(el);
 	  var ds = Object.assign({}, dataset);
 	
 	  if (ds) {

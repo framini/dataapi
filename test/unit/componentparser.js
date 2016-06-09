@@ -75,7 +75,8 @@ test('parseComponents method returns a Map of components', t => {
 
     // checks if it is a Set
     // TODO: review if there is a better way to validate this
-    st.equal(typeof componentsToBeParsedUsingContent, 'object');
+    st.equal(typeof componentsToBeParsedUsingContent, 'object', `componentsToBeParsedUsingContent
+      should a Map`);
     st.equal(typeof componentsToBeParsedUsingContent.add, 'function');
     st.equal(typeof componentsToBeParsedUsingContent.has, 'function');
     // checks that we are only parsing components using the supported namespaces
@@ -132,7 +133,7 @@ test('parseComponents method returns a Map of components', t => {
     st.end();
   });
 
-  t.skip('initComponent should initialize the parsed components', st => {
+  t.test('initComponent should initialize the parsed components', st => {
     const initCmps = cmp.parseComponents(config);
 
     st.equal(initCmps, cmp.getParsedComponents());

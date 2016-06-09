@@ -21,7 +21,8 @@ test('all dataapi API method return a Promise', t => {
   t.equal(typeof d.start().then, 'function');
   t.equal(typeof d.stop(), 'object', 'stop return a Promise');
   t.equal(typeof d.stop().then, 'function');
-  t.equal(typeof d.getInitializedComponents(), 'object', 'getInitializedComponents return a Promise');
+  t.equal(typeof d.getInitializedComponents(), 'object',
+  'getInitializedComponents return a Promise');
   t.equal(typeof d.getInitializedComponents().then, 'function');
   t.end();
 });
@@ -31,11 +32,9 @@ test('API return values', t => {
   // them this way in order to spy on their methods
   const ret1 = { init: sinon.stub(), stop: sinon.stub() };
   const ret2 = { init: sinon.stub() };
-  const ret3 = { init: sinon.stub(), stop: sinon.stub() };
   // Factories (i.e modules definition)
   const Bar = () => ret1;
   const Foo = () => ret2;
-  const Baz = () => ret3;
   // Test DOM elements
   const div1 = document.createElement('div');
   const div2 = document.createElement('div');
@@ -123,36 +122,36 @@ test('API return values', t => {
   t.test('return value of the start method', st => {
     d.start().then((initializedComponents) => {
       st.equal(initializedComponents.size, goalInitializedComponents);
-      st.end()
+      st.end();
     });
   });
 
   t.test('return value of the getSkippedComponents method', st => {
     d.getSkippedComponents().then((skippedComponents) => {
       st.equal(skippedComponents.size, goalSkippedComponents);
-      st.end()
+      st.end();
     });
   });
 
   t.test('return value of the getInitializedComponents method', st => {
     d.getInitializedComponents().then((initializedComponents) => {
       st.equal(initializedComponents.size, goalInitializedComponents);
-      st.end()
+      st.end();
     });
   });
 
   t.test('return value of the stop method', st => {
     d.stop().then((status) => {
       st.ok(status);
-      st.end()
+      st.end();
     });
   });
 
-  t.test('return value of the getInitializedComponents method after calling the .stop method', st => {
+  t.test(`return value of the getInitializedComponents method after calling the
+    .stop method`, st => {
     d.getInitializedComponents().then((initializedComponents) => {
       st.equal(initializedComponents.size, 0);
-      st.end()
+      st.end();
     });
   });
-
 });

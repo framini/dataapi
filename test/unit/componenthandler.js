@@ -126,15 +126,20 @@ test('initializes all the passed components by calling their respective method',
   // we'll check that wathever is returned from componentHandler call
   // it is what we are expecting
   t.ok(ret1.init.calledTwice, 'Bar factory was called 2 times');
-  t.ok(ret1.init.calledWith(param1, shared), 'Bar init called with param1 and shared as parameters');
-  t.ok(ret1.init.calledWith(param2, shared), 'Bar init called with param2 and shared as parameters');
+  t.ok(ret1.init.calledWith(param1, shared), `Bar init called with param1 and shared
+  as parameters`);
+  t.ok(ret1.init.calledWith(param2, shared), `Bar init called with param2 and shared
+  as parameters`);
   t.ok(ret2.init.calledTwice, 'Foo factory was called 2 times');
-  t.ok(ret2.init.calledWith(param3, shared), 'Foo init called with param3 and shared as parameters');
-  t.ok(ret2.init.calledWith(param4, shared), 'Foo init called with param4 and shared as parameters');
+  t.ok(ret2.init.calledWith(param3, shared), `Foo init called with param3 and shared
+  as parameters`);
+  t.ok(ret2.init.calledWith(param4, shared), `Foo init called with param4 and shared
+  as parameters`);
   t.ok(ret3.init.calledOnce, 'Baz factory was called 1 time');
-  t.ok(ret3.init.calledWith(param5, shared), 'Baz init called with param5 and shared as parameters');
-  t.equal(compHandler.stopComponents().size, 0, `
-  there should no components left in the Map of initialized components`);
+  t.ok(ret3.init.calledWith(param5, shared), `Baz init called with param5 and shared
+  as parameters`);
+  t.equal(compHandler.stopComponents().size, 0, `there should no components left in
+  the Map of initialized components`);
   t.ok(ret1.stop.calledTwice, 'Bar stop method was called twice');
   t.ok(ret3.stop.calledOnce, 'Baz stop method was called once');
   t.end();

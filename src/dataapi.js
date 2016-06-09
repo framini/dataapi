@@ -98,7 +98,7 @@ export default function dataapi(cfg) {
     parentSelector: 'body',
     namespaces: ['api'],
     internalCache,
-    shared: undefined // shared Map to store shared functionality
+    shared: undefined, // shared Map to store shared functionality
   });
 
   return {

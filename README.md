@@ -1,4 +1,4 @@
-# Dataapi: WIP (not ready to use)
+Dataapi: WIP (not ready to use)
 =================
 [![Build Status](https://travis-ci.org/framini/dataapi.svg?branch=master)](https://travis-ci.org/framini/dataapi)
 

@@ -1,5 +1,34 @@
 import { forEach as _forEach } from 'lodash';
 
+function __toCamelCase(s, dashChar) {
+  return s.replace(dashChar, (m, l) => l.toUpperCase());
+}
+
+function __getDataset(el) {
+  let dataset = {};
+
+  if (el && el.dataset !== undefined) {
+    dataset = el.dataset;
+  } else {
+    // for browsers not supporting the .dataset property (IE10 or lower)
+    const regex = /^data-(.+)/;
+    const dashChar = /\-([a-z])/ig;
+    let match;
+    const forEach = [].forEach;
+    dataset = {};
+    if (el && el.hasAttributes()) {
+      forEach.call(el.attributes, attr => {
+        match = attr.name.match(regex);
+        if (match) {
+          dataset[__toCamelCase(match[1], dashChar)] = attr.value;
+        }
+      });
+    }
+  }
+
+  return dataset;
+}
+
 function __selectComponents(options) {
   let collection = null;
 
@@ -10,7 +39,8 @@ function __selectComponents(options) {
        * namespace
        */
       collection = options.content.filter(el => {
-        const ds = Object.assign({}, el.dataset);
+        const dataset = __getDataset(el);
+        const ds = Object.assign({}, dataset);
         let allowedNamespace = false;
 
         _forEach(ds, (v, k) => {
@@ -58,34 +88,11 @@ function __getComponentNamespace(key) {
   return m[0].toLowerCase();
 }
 
-function __toCamelCase(s, dashChar) {
-  return s.replace(dashChar, (m, l) => l.toUpperCase());
-}
-
 function __parseComponentOptions(el) {
   const options = new Map();
   let name;
   let namespace;
-  let dataset = {};
-
-  if (el.dataset !== undefined) {
-    dataset = el.dataset;
-  } else {
-    // for browsers not supporting the .dataset property (IE10 or lower)
-    const regex = /^data-(.+)/;
-    const dashChar = /\-([a-z])/ig;
-    let match;
-    const forEach = [].forEach;
-    dataset = {};
-    if (el.hasAttributes()) {
-      forEach.call(el.attributes, attr => {
-        match = attr.name.match(regex);
-        if (match) {
-          dataset[__toCamelCase(match[1], dashChar)] = attr.value;
-        }
-      });
-    }
-  }
+  const dataset = __getDataset(el);
   const ds = Object.assign({}, dataset);
 
   if (ds) {
